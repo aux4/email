@@ -10,35 +10,55 @@ aux4 aux4 pkger install aux4/email
 
 ## Configuration
 
-Before using the email commands, configure your email server settings:
+Create the config file at `~/.config/aux4/email.yaml`:
 
-```bash
-aux4 email config set \
-  --imapHost imap.gmail.com \
-  --imapPort 993 \
-  --smtpHost smtp.gmail.com \
-  --smtpPort 465 \
-  --user your.email@gmail.com \
-  --password your-app-password
+```yaml
+imap:
+  host: imap.gmail.com
+  port: "993"
+smtp:
+  host: smtp.gmail.com
+  port: "465"
+user: your.email@gmail.com
+password: xxxx xxxx xxxx xxxx
 ```
-
-Configuration is stored in `~/.config/aux4/email.yaml` via `aux4/config`. Use `--configFile` to specify an alternative path.
 
 ### Provider Examples
 
 **Gmail:**
-```bash
-aux4 email config set --imapHost imap.gmail.com --smtpHost smtp.gmail.com --user you@gmail.com --password your-app-password
+```yaml
+imap:
+  host: imap.gmail.com
+  port: "993"
+smtp:
+  host: smtp.gmail.com
+  port: "465"
+user: your.email@gmail.com
+password: xxxx xxxx xxxx xxxx
 ```
 
 **Outlook:**
-```bash
-aux4 email config set --imapHost outlook.office365.com --smtpHost smtp.office365.com --smtpPort 587 --user you@outlook.com --password your-app-password
+```yaml
+imap:
+  host: outlook.office365.com
+  port: "993"
+smtp:
+  host: smtp.office365.com
+  port: "587"
+user: your.email@outlook.com
+password: xxxx xxxx xxxx xxxx
 ```
 
 **Yahoo:**
-```bash
-aux4 email config set --imapHost imap.mail.yahoo.com --smtpHost smtp.mail.yahoo.com --user you@yahoo.com --password your-app-password
+```yaml
+imap:
+  host: imap.mail.yahoo.com
+  port: "993"
+smtp:
+  host: smtp.mail.yahoo.com
+  port: "465"
+user: your.email@yahoo.com
+password: xxxx xxxx xxxx xxxx
 ```
 
 > **Note:** Most providers require an app-specific password instead of your regular account password. See your provider's documentation for generating app passwords.
@@ -94,16 +114,6 @@ aux4 email attachment download 12345 --file document.pdf
 aux4 email attachment download 12345 --file document.pdf --output ~/Downloads/document.pdf
 ```
 
-### Configuration
-
-```bash
-# Show current configuration
-aux4 email config show
-
-# Update a single setting
-aux4 email config set --smtpPort 587
-```
-
 ## Commands
 
 | Command | Description |
@@ -114,8 +124,6 @@ aux4 email config set --smtpPort 587
 | `aux4 email send` | Send an email |
 | `aux4 email attachment list <uid>` | List attachments of an email |
 | `aux4 email attachment download <uid>` | Download an attachment |
-| `aux4 email config set` | Configure email settings |
-| `aux4 email config show` | Show current configuration |
 
 ## License
 

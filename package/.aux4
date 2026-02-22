@@ -1,7 +1,7 @@
 {
   "scope": "aux4",
   "name": "email",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Email client for listing, reading, sending emails and managing attachments via IMAP and SMTP",
   "license": "Apache-2.0",
   "tags": [
@@ -44,7 +44,7 @@
         {
           "name": "list",
           "execute": [
-            "profile:email_list"
+            "profile:email:list"
           ],
           "help": {
             "text": "List emails"
@@ -183,25 +183,16 @@
         {
           "name": "attachment",
           "execute": [
-            "profile:email_attachment"
+            "profile:email:attachment"
           ],
           "help": {
             "text": "Manage email attachments"
-          }
-        },
-        {
-          "name": "config",
-          "execute": [
-            "profile:email_config"
-          ],
-          "help": {
-            "text": "Configure email settings"
           }
         }
       ]
     },
     {
-      "name": "email_list",
+      "name": "email:list",
       "commands": [
         {
           "name": "all",
@@ -323,7 +314,7 @@
       ]
     },
     {
-      "name": "email_attachment",
+      "name": "email:attachment",
       "commands": [
         {
           "name": "list",
@@ -432,82 +423,6 @@
                 "name": "mailbox",
                 "text": "Mailbox/folder name",
                 "default": "INBOX"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "email_config",
-      "commands": [
-        {
-          "name": "set",
-          "execute": [
-            "mkdir -p $(dirname value(configFile)) && touch value(configFile)",
-            "aux4 config set --file value(configFile) --name imap.host value(imap.host)",
-            "aux4 config set --file value(configFile) --name imap.port value(imap.port)",
-            "aux4 config set --file value(configFile) --name smtp.host value(smtp.host)",
-            "aux4 config set --file value(configFile) --name smtp.port value(smtp.port)",
-            "aux4 config set --file value(configFile) --name user value(user)",
-            "aux4 config set --file value(configFile) --name password value(password)",
-            "log:Configuration saved"
-          ],
-          "help": {
-            "text": "Configure email server settings",
-            "variables": [
-              {
-                "name": "imap.host",
-                "text": "IMAP server hostname (e.g., imap.gmail.com)"
-              },
-              {
-                "name": "imap.port",
-                "text": "IMAP server port",
-                "default": "993"
-              },
-              {
-                "name": "smtp.host",
-                "text": "SMTP server hostname (e.g., smtp.gmail.com)"
-              },
-              {
-                "name": "smtp.port",
-                "text": "SMTP server port",
-                "default": "465"
-              },
-              {
-                "name": "user",
-                "text": "Email address / username"
-              },
-              {
-                "name": "password",
-                "text": "Email password or app-specific password",
-                "hide": true
-              },
-              {
-                "name": "configFile",
-                "text": "Config file path",
-                "default": "~/.config/aux4/email.yaml"
-              }
-            ]
-          }
-        },
-        {
-          "name": "show",
-          "execute": [
-            "echo \"IMAP Host: $(aux4 config get --file ${configFile} imap.host)\"",
-            "echo \"IMAP Port: $(aux4 config get --file ${configFile} imap.port)\"",
-            "echo \"SMTP Host: $(aux4 config get --file ${configFile} smtp.host)\"",
-            "echo \"SMTP Port: $(aux4 config get --file ${configFile} smtp.port)\"",
-            "echo \"User: $(aux4 config get --file ${configFile} user)\"",
-            "echo \"Password: ********\""
-          ],
-          "help": {
-            "text": "Show current email configuration",
-            "variables": [
-              {
-                "name": "configFile",
-                "text": "Config file path",
-                "default": "~/.config/aux4/email.yaml"
               }
             ]
           }
