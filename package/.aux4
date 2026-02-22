@@ -1,7 +1,7 @@
 {
   "scope": "aux4",
   "name": "email",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Email client for listing, reading, sending emails and managing attachments via IMAP and SMTP",
   "license": "Apache-2.0",
   "tags": [
