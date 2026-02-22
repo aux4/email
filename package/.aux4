@@ -1,0 +1,518 @@
+{
+  "scope": "aux4",
+  "name": "email",
+  "version": "1.0.0",
+  "description": "Email client for listing, reading, sending emails and managing attachments via IMAP and SMTP",
+  "license": "Apache-2.0",
+  "tags": [
+    "email",
+    "imap",
+    "smtp",
+    "gmail",
+    "outlook",
+    "attachments"
+  ],
+  "dependencies": [
+    "aux4/config"
+  ],
+  "system": [
+    [
+      "test:node --version",
+      "brew:node",
+      "apt:nodejs",
+      "linux:nodejs"
+    ]
+  ],
+  "profiles": [
+    {
+      "name": "main",
+      "commands": [
+        {
+          "name": "email",
+          "execute": [
+            "profile:email"
+          ],
+          "help": {
+            "text": "Email commands"
+          }
+        }
+      ]
+    },
+    {
+      "name": "email",
+      "commands": [
+        {
+          "name": "list",
+          "execute": [
+            "profile:email_list"
+          ],
+          "help": {
+            "text": "List emails"
+          }
+        },
+        {
+          "name": "read",
+          "execute": [
+            "node ${packageDir}/lib/email.mjs read values(imap.host, imap.port, smtp.host, smtp.port, user, password, mailbox, uid, raw, bodyOnly)"
+          ],
+          "help": {
+            "text": "Read an email by UID",
+            "variables": [
+              {
+                "name": "uid",
+                "text": "Email UID",
+                "arg": true
+              },
+              {
+                "name": "raw",
+                "text": "Show raw output without colors",
+                "default": "false"
+              },
+              {
+                "name": "bodyOnly",
+                "text": "Show only the email body",
+                "default": "false"
+              },
+              {
+                "name": "configFile",
+                "text": "Config file path",
+                "default": "~/.config/aux4/email.yaml"
+              },
+              {
+                "name": "imap.host",
+                "text": "IMAP server hostname"
+              },
+              {
+                "name": "imap.port",
+                "text": "IMAP server port"
+              },
+              {
+                "name": "smtp.host",
+                "text": "SMTP server hostname"
+              },
+              {
+                "name": "smtp.port",
+                "text": "SMTP server port"
+              },
+              {
+                "name": "user",
+                "text": "Email address / username"
+              },
+              {
+                "name": "password",
+                "text": "Email password",
+                "hide": true
+              },
+              {
+                "name": "mailbox",
+                "text": "Mailbox/folder name",
+                "default": "INBOX"
+              }
+            ]
+          }
+        },
+        {
+          "name": "send",
+          "execute": [
+            "stdin:node ${packageDir}/lib/email.mjs send values(imap.host, imap.port, smtp.host, smtp.port, user, password, to, subject, body, cc, bcc, attachment)"
+          ],
+          "help": {
+            "text": "Send an email",
+            "variables": [
+              {
+                "name": "to",
+                "text": "Recipient email address"
+              },
+              {
+                "name": "subject",
+                "text": "Email subject"
+              },
+              {
+                "name": "body",
+                "text": "Email body text",
+                "default": ""
+              },
+              {
+                "name": "cc",
+                "text": "CC recipients (comma-separated)",
+                "default": ""
+              },
+              {
+                "name": "bcc",
+                "text": "BCC recipients (comma-separated)",
+                "default": ""
+              },
+              {
+                "name": "attachment",
+                "text": "File path to attach",
+                "default": ""
+              },
+              {
+                "name": "configFile",
+                "text": "Config file path",
+                "default": "~/.config/aux4/email.yaml"
+              },
+              {
+                "name": "imap.host",
+                "text": "IMAP server hostname"
+              },
+              {
+                "name": "imap.port",
+                "text": "IMAP server port"
+              },
+              {
+                "name": "smtp.host",
+                "text": "SMTP server hostname"
+              },
+              {
+                "name": "smtp.port",
+                "text": "SMTP server port"
+              },
+              {
+                "name": "user",
+                "text": "Email address / username"
+              },
+              {
+                "name": "password",
+                "text": "Email password",
+                "hide": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "attachment",
+          "execute": [
+            "profile:email_attachment"
+          ],
+          "help": {
+            "text": "Manage email attachments"
+          }
+        },
+        {
+          "name": "config",
+          "execute": [
+            "profile:email_config"
+          ],
+          "help": {
+            "text": "Configure email settings"
+          }
+        }
+      ]
+    },
+    {
+      "name": "email_list",
+      "commands": [
+        {
+          "name": "all",
+          "execute": [
+            "node ${packageDir}/lib/email.mjs list-all values(imap.host, imap.port, smtp.host, smtp.port, user, password, mailbox, limit, subject)"
+          ],
+          "help": {
+            "text": "List all emails",
+            "variables": [
+              {
+                "name": "configFile",
+                "text": "Config file path",
+                "default": "~/.config/aux4/email.yaml"
+              },
+              {
+                "name": "imap.host",
+                "text": "IMAP server hostname"
+              },
+              {
+                "name": "imap.port",
+                "text": "IMAP server port"
+              },
+              {
+                "name": "smtp.host",
+                "text": "SMTP server hostname"
+              },
+              {
+                "name": "smtp.port",
+                "text": "SMTP server port"
+              },
+              {
+                "name": "user",
+                "text": "Email address / username"
+              },
+              {
+                "name": "password",
+                "text": "Email password",
+                "hide": true
+              },
+              {
+                "name": "mailbox",
+                "text": "Mailbox/folder name",
+                "default": "INBOX"
+              },
+              {
+                "name": "limit",
+                "text": "Maximum number of emails to list",
+                "default": "20"
+              },
+              {
+                "name": "subject",
+                "text": "Filter by partial subject match",
+                "default": ""
+              }
+            ]
+          }
+        },
+        {
+          "name": "from",
+          "execute": [
+            "node ${packageDir}/lib/email.mjs list-from values(imap.host, imap.port, smtp.host, smtp.port, user, password, mailbox, limit, email, subject)"
+          ],
+          "help": {
+            "text": "List emails from a specific sender",
+            "variables": [
+              {
+                "name": "email",
+                "text": "Sender email address",
+                "arg": true
+              },
+              {
+                "name": "configFile",
+                "text": "Config file path",
+                "default": "~/.config/aux4/email.yaml"
+              },
+              {
+                "name": "imap.host",
+                "text": "IMAP server hostname"
+              },
+              {
+                "name": "imap.port",
+                "text": "IMAP server port"
+              },
+              {
+                "name": "smtp.host",
+                "text": "SMTP server hostname"
+              },
+              {
+                "name": "smtp.port",
+                "text": "SMTP server port"
+              },
+              {
+                "name": "user",
+                "text": "Email address / username"
+              },
+              {
+                "name": "password",
+                "text": "Email password",
+                "hide": true
+              },
+              {
+                "name": "mailbox",
+                "text": "Mailbox/folder name",
+                "default": "INBOX"
+              },
+              {
+                "name": "limit",
+                "text": "Maximum number of emails to list",
+                "default": "20"
+              },
+              {
+                "name": "subject",
+                "text": "Filter by partial subject match",
+                "default": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "email_attachment",
+      "commands": [
+        {
+          "name": "list",
+          "execute": [
+            "node ${packageDir}/lib/email.mjs attachment-list values(imap.host, imap.port, smtp.host, smtp.port, user, password, mailbox, uid)"
+          ],
+          "help": {
+            "text": "List attachments of an email",
+            "variables": [
+              {
+                "name": "uid",
+                "text": "Email UID",
+                "arg": true
+              },
+              {
+                "name": "configFile",
+                "text": "Config file path",
+                "default": "~/.config/aux4/email.yaml"
+              },
+              {
+                "name": "imap.host",
+                "text": "IMAP server hostname"
+              },
+              {
+                "name": "imap.port",
+                "text": "IMAP server port"
+              },
+              {
+                "name": "smtp.host",
+                "text": "SMTP server hostname"
+              },
+              {
+                "name": "smtp.port",
+                "text": "SMTP server port"
+              },
+              {
+                "name": "user",
+                "text": "Email address / username"
+              },
+              {
+                "name": "password",
+                "text": "Email password",
+                "hide": true
+              },
+              {
+                "name": "mailbox",
+                "text": "Mailbox/folder name",
+                "default": "INBOX"
+              }
+            ]
+          }
+        },
+        {
+          "name": "download",
+          "execute": [
+            "node ${packageDir}/lib/email.mjs attachment-download values(imap.host, imap.port, smtp.host, smtp.port, user, password, mailbox, uid, file, output)"
+          ],
+          "help": {
+            "text": "Download an attachment from an email",
+            "variables": [
+              {
+                "name": "uid",
+                "text": "Email UID",
+                "arg": true
+              },
+              {
+                "name": "file",
+                "text": "Attachment filename to download"
+              },
+              {
+                "name": "output",
+                "text": "Output file path (defaults to current directory)",
+                "default": ""
+              },
+              {
+                "name": "configFile",
+                "text": "Config file path",
+                "default": "~/.config/aux4/email.yaml"
+              },
+              {
+                "name": "imap.host",
+                "text": "IMAP server hostname"
+              },
+              {
+                "name": "imap.port",
+                "text": "IMAP server port"
+              },
+              {
+                "name": "smtp.host",
+                "text": "SMTP server hostname"
+              },
+              {
+                "name": "smtp.port",
+                "text": "SMTP server port"
+              },
+              {
+                "name": "user",
+                "text": "Email address / username"
+              },
+              {
+                "name": "password",
+                "text": "Email password",
+                "hide": true
+              },
+              {
+                "name": "mailbox",
+                "text": "Mailbox/folder name",
+                "default": "INBOX"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "email_config",
+      "commands": [
+        {
+          "name": "set",
+          "execute": [
+            "mkdir -p $(dirname value(configFile)) && touch value(configFile)",
+            "aux4 config set --file value(configFile) --name imap.host value(imap.host)",
+            "aux4 config set --file value(configFile) --name imap.port value(imap.port)",
+            "aux4 config set --file value(configFile) --name smtp.host value(smtp.host)",
+            "aux4 config set --file value(configFile) --name smtp.port value(smtp.port)",
+            "aux4 config set --file value(configFile) --name user value(user)",
+            "aux4 config set --file value(configFile) --name password value(password)",
+            "log:Configuration saved"
+          ],
+          "help": {
+            "text": "Configure email server settings",
+            "variables": [
+              {
+                "name": "imap.host",
+                "text": "IMAP server hostname (e.g., imap.gmail.com)"
+              },
+              {
+                "name": "imap.port",
+                "text": "IMAP server port",
+                "default": "993"
+              },
+              {
+                "name": "smtp.host",
+                "text": "SMTP server hostname (e.g., smtp.gmail.com)"
+              },
+              {
+                "name": "smtp.port",
+                "text": "SMTP server port",
+                "default": "465"
+              },
+              {
+                "name": "user",
+                "text": "Email address / username"
+              },
+              {
+                "name": "password",
+                "text": "Email password or app-specific password",
+                "hide": true
+              },
+              {
+                "name": "configFile",
+                "text": "Config file path",
+                "default": "~/.config/aux4/email.yaml"
+              }
+            ]
+          }
+        },
+        {
+          "name": "show",
+          "execute": [
+            "echo \"IMAP Host: $(aux4 config get --file ${configFile} imap.host)\"",
+            "echo \"IMAP Port: $(aux4 config get --file ${configFile} imap.port)\"",
+            "echo \"SMTP Host: $(aux4 config get --file ${configFile} smtp.host)\"",
+            "echo \"SMTP Port: $(aux4 config get --file ${configFile} smtp.port)\"",
+            "echo \"User: $(aux4 config get --file ${configFile} user)\"",
+            "echo \"Password: ********\""
+          ],
+          "help": {
+            "text": "Show current email configuration",
+            "variables": [
+              {
+                "name": "configFile",
+                "text": "Config file path",
+                "default": "~/.config/aux4/email.yaml"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
